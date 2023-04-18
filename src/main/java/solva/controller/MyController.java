@@ -55,12 +55,17 @@ public class MyController {
     }
 
     @RequestMapping("/setTransaction")
-    public String setTransaction(@ModelAttribute("currentUser") Users user){
+    public String setTransaction(@ModelAttribute("currentUser") Users user, Model model){
         int id = user.getId();
         double transactionLimit = user.getTransaction_limit();
         userService.setTransaction(id, transactionLimit);
         transactionService.setTransaction(id, transactionLimit);
-        return "redirect:/userInfo?userId=" + id;
+        Users user1 = userService.getUser(id);
+        All_transactions transactions = new All_transactions();
+        transactions.setUser_id(id);
+        model.addAttribute("currentUser", user1);
+        model.addAttribute("transactions", transactions);
+        return "user-info";
     }
 
     @RequestMapping("/setPayment")
